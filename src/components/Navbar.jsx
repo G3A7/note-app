@@ -8,7 +8,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const [openUl, setOpenUl] = useState(true);
   const [h, seth] = useState(70);
-  const { token } = useContext(TokenProvider);
+  const { token, setToken } = useContext(TokenProvider);
   function expand() {
     if (openUl) {
       const hh = refUL.current.scrollHeight + 90;
@@ -82,7 +82,15 @@ function Navbar() {
                         className="fixed end-[10px] z-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg "
                         role="menu"
                       >
-                        <div className="p-2">
+                        <div
+                          onClick={() => {
+                            localStorage.removeItem("token");
+                            setOpen(false);
+                            setToken(null);
+                            console.log("sdasd");
+                          }}
+                          className="p-2"
+                        >
                           <a
                             href="#"
                             className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 "

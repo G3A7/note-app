@@ -11,12 +11,14 @@ function Notes() {
   const { token } = useContext(TokenProvider);
   const [loader, setLoader] = useState(false);
   const [loaderIcone, setLoaderIcon] = useState(false);
-  const [notes, setNotes] = useState(null);
+  const [notes, setNotes] = useState([]);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [id, setID] = useState(null);
+  const [loaderPage, setLoaderPage] = useState(false);
   // const [completed, setCompleted] = useState([]);
   // "dd".toUpperCase
   async function getNotesToPage() {
+    setLoaderPage(true);
     try {
       const data = await getNotes();
       if (data.msg == "not notes found") {
@@ -26,6 +28,8 @@ function Notes() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoaderPage(false);
     }
   }
 
@@ -38,7 +42,13 @@ function Notes() {
     });
     try {
       const data = await promiseDElete;
-      setNotes(data?.notes);
+      console.log(data);
+      if (data.msg == "not notes found") {
+        setNotes([]);
+      } else {
+        setNotes(data?.notes);
+      }
+      // setNotes(data?.notes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -46,6 +56,7 @@ function Notes() {
     }
   }
 
+  // console.log(notes);
   useEffect(() => {
     token && getNotesToPage();
   }, [token]);
@@ -53,6 +64,17 @@ function Notes() {
   return (
     <div>
       <div className="flex flex-wrap">
+        {loaderPage ? (
+          <div className="flex items-center justify-center w-full min-h-[60vh]">
+            <i className="text-5xl text-slate-600 font-bold fas fa-spin fa-spinner"></i>
+          </div>
+        ) : (
+          notes?.length == 0 && (
+            <div className="flex items-center justify-center w-full min-h-[60vh]">
+              <p className="text-5xl text-slate-600 font-bold">No Notes</p>
+            </div>
+          )
+        )}
         {notes?.map((item) => (
           <div key={item._id} className="p-3 w-full  md:w-1/2">
             <div className="bg-white border-b-1 sm:border-b-0 p-2 rounded-md transition-all duration-300 cursor-pointer hover:translate-y-[3px] ">
