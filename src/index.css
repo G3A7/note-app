@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+.custom-style {
+  color: transparent;
+  background-clip: text;
+  background-image: linear-gradient(to right, #295c81 30%, #258bd3 30%, #2099efdf 40%);
+}
+body {
+  @apply pt-[6.5rem];
+}
+
+.active {
+  @apply bg-sky-600 text-white;
+}
+
+/* انا اللي عايز كدا 😁 */
+form div input:focus {
+  border-color: transparent;
+}
