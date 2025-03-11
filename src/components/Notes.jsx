@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import Modal from "./Modal";
 import { NoteProvider } from "../Context/ContextNotesProvider";
 import { TokenProvider } from "../Context/ContextTokenProvider";
-import toast from "react-hot-toast";
-import { data } from "react-router-dom";
 
 function Notes() {
   const [showModal, setShowModal] = useState(false);
@@ -12,32 +10,26 @@ function Notes() {
   const [loader, setLoader] = useState(false);
   const [loaderIcone, setLoaderIcon] = useState(false);
   const [notes, setNotes] = useState(null);
+  // const [id, setID] = useState(null);
   // "dd".toUpperCase
   async function getNotesToPage() {
     try {
-      const { notes } = await getNotes();
-      console.log(notes);
-      setNotes(notes);
+      const data = await getNotes();
+      if (data.msg == "not notes found") {
+        setNotes([]);
+      } else {
+        setNotes(data.notes);
+      }
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function deleteNoteFromPage(id) {
-    const deletePromise = deleteNote(id);
-    toast.promise(deletePromise, {
-      loading: "loading",
-      success: "success",
-    });
+  async function deleteFromPage(id) {
+    setLoaderIcon((prev) => ({ ...prev, [id]: true }));
     try {
-      setLoaderIcon((prev) => ({ ...prev, [id]: true }));
-      const data = await deletePromise;
-      // console.log(data);
-      if (data.msg == "done") {
-        console.log("sssss");
-        getNotesToPage();
-      }
-      // setNotes(notes);
+      const data = await deleteNote(id);
+      setNotes(data?.notes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -58,12 +50,17 @@ function Notes() {
               <h2 className="font-bold text-xl custom-style">{item.title.toUpperCase()}</h2>
               <p className="font-medium mt-1 max-h-[350px]  overflow-y-auto">{item.content}</p>
               <div className="flex justify-center items-center gap-2 mt-3">
-                <button className=" relative overflow-hidden bg-sky-600 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-sky-700 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300">
+                <button
+                  // onClick={() => {
+                  //   setShowModal(true);
+                  // }}
+                  className=" relative overflow-hidden bg-sky-600 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-sky-700 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300"
+                >
                   <i className="fa-solid fa-pen-to-square"></i>
                 </button>
                 <button
                   onClick={() => {
-                    deleteNoteFromPage(item._id);
+                    deleteFromPage(item._id);
                   }}
                   className="relative overflow-hidden bg-red-500  rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-red-600  text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300"
                 >
@@ -97,6 +94,7 @@ function Notes() {
             loader={loader}
             setNotes={setNotes}
             setShowModal={setShowModal}
+            
           />
         </>
       )}

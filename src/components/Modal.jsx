@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { NoteProvider } from "../Context/ContextNotesProvider";
 // eslint-disable-next-line react/prop-types
 function Modal({ setShowModal, setNotes, setLoader, loader }) {
-  const { AddNote } = useContext(NoteProvider);
+  const { AddNotes } = useContext(NoteProvider);
   const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(5).max(25),
     content: Yup.string().required().min(5).max(320),
@@ -13,8 +13,10 @@ function Modal({ setShowModal, setNotes, setLoader, loader }) {
   async function onSubmit(vals) {
     try {
       setLoader(true);
-      const { notes } = await AddNote(vals);
-      setNotes(notes);
+      console.log(vals);
+      const data = await AddNotes(vals);
+      // console.log(data);
+      setNotes(data.notes);
       setShowModal(false);
     } catch (error) {
       console.log(error);
