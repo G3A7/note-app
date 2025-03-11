@@ -56,8 +56,25 @@ function ContextNotesProvider({ children }) {
     }
   }
 
+  async function updateNote(id, val) {
+    try {
+      const { data } = await axios.put(
+        `https://note-sigma-black.vercel.app/api/v1/notes/${id}`,
+        val,
+        {
+          headers: {
+            token: `3b8ny__${token}`,
+          },
+        }
+      );
+      return await getNotes();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <NoteProvider.Provider value={{ AddNotes, getNotes, deleteNote }}>
+    <NoteProvider.Provider value={{ AddNotes, getNotes, deleteNote, updateNote }}>
       {children}
     </NoteProvider.Provider>
   );

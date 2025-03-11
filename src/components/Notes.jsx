@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Modal from "./Modal";
 import { NoteProvider } from "../Context/ContextNotesProvider";
 import { TokenProvider } from "../Context/ContextTokenProvider";
+import ModalUpdate from "./ModalUpdate";
 
 function Notes() {
   const [showModal, setShowModal] = useState(false);
@@ -10,7 +11,8 @@ function Notes() {
   const [loader, setLoader] = useState(false);
   const [loaderIcone, setLoaderIcon] = useState(false);
   const [notes, setNotes] = useState(null);
-  // const [id, setID] = useState(null);
+  const [modalUpdate, setModalUpdate] = useState(false);
+  const [id, setID] = useState(null);
   // "dd".toUpperCase
   async function getNotesToPage() {
     try {
@@ -51,9 +53,11 @@ function Notes() {
               <p className="font-medium mt-1 max-h-[350px]  overflow-y-auto">{item.content}</p>
               <div className="flex justify-center items-center gap-2 mt-3">
                 <button
-                  // onClick={() => {
-                  //   setShowModal(true);
-                  // }}
+                  onClick={() => {
+                    setModalUpdate(true);
+                    setID(item._id);
+                    // setShowModal(true);
+                  }}
                   className=" relative overflow-hidden bg-sky-600 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-sky-700 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300"
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
@@ -94,9 +98,19 @@ function Notes() {
             loader={loader}
             setNotes={setNotes}
             setShowModal={setShowModal}
-            
           />
         </>
+      )}
+
+      {modalUpdate && (
+        <ModalUpdate
+          setModalUpdate={setModalUpdate}
+          loader={loader}
+          setLoader={setLoader}
+          id={id}
+          notes={notes}
+          setNotes={setNotes}
+        />
       )}
     </div>
   );

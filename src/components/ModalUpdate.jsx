@@ -2,21 +2,23 @@ import { useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NoteProvider } from "../Context/ContextNotesProvider";
-function ModalUpdate(setShowModal, setNotes, setLoader, loader) {
-  const { AddNotes } = useContext(NoteProvider);
+// import { NoteProvider } from "../Context/ContextNotesProvider";
+function ModalUpdate({ setModalUpdate, loader, setLoader, id, notes, setNotes }) {
+  const { updateNote } = useContext(NoteProvider);
   const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(5).max(25),
     content: Yup.string().required().min(5).max(320),
   });
 
+  // eslint-disable-next-line react/prop-types
+  const note = notes.find((item) => item._id == id);
   async function onSubmit(vals) {
     try {
       setLoader(true);
-      console.log(vals);
-    //   const data = await AddNotes(vals);
-    //   // console.log(data);
-    //   setNotes(data.notes);
-      setShowModal(false);
+      const data = await updateNote(id, vals);
+      setNotes(data.notes);
+
+      setModalUpdate(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -25,8 +27,8 @@ function ModalUpdate(setShowModal, setNotes, setLoader, loader) {
   }
   const formik = useFormik({
     initialValues: {
-      title: "",
-      content: "",
+      title: note.title,
+      content: note.content,
     },
     validationSchema,
     onSubmit,
@@ -76,7 +78,7 @@ function ModalUpdate(setShowModal, setNotes, setLoader, loader) {
                 </button>
                 <button
                   onClick={() => {
-                    setShowModal(false);
+                    setModalUpdate(false);
                   }}
                   className="relative overflow-hidden bg-red-500 w-full rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-red-600 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300 disabled:cursor-not-allowed  "
                 >
