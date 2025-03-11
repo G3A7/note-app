@@ -38,14 +38,6 @@ function App() {
               ),
             },
             {
-              path: "/completed",
-              element: (
-                <ProtectedRoute>
-                  <Completed />
-                </ProtectedRoute>
-              ),
-            },
-            {
               path: "/register",
               element: <Register />,
             },

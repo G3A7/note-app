@@ -41,10 +41,10 @@ function Navbar() {
                     // والله مش عارف هو شغال ازاي بس طوول ماهو بيادي الغرض فا انا سيبه 😂
                     to={`${location.pathname == "/" ? "/" : "/notes"}`}
                   >
-                    My Note
+                    My Notes
                   </NavLink>
                 </li>
-                <li className=" w-full   text-center">
+                {/* <li className=" w-full   text-center">
                   <NavLink
                     className=" shadow md:shadow-none relative overflow-hidden block cursor-pointer py-1 px-1 md:px-3 mb-2 md:mb-0  text-black  md:text-black  text-lg font-medium rounded-lg    after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-500  md:bg-white hover:bg-sky-500
             hover:text-white transition-all duration-300"
@@ -52,7 +52,7 @@ function Navbar() {
                   >
                     Completd
                   </NavLink>
-                </li>
+                </li> */}
               </ul>
               <ul className="flex items-center gap-4 md:gap-0">
                 <li

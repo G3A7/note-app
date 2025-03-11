@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NoteProvider } from "../Context/ContextNotesProvider";
+import toast from "react-hot-toast";
 // import { NoteProvider } from "../Context/ContextNotesProvider";
 function ModalUpdate({ setModalUpdate, loader, setLoader, id, notes, setNotes }) {
   const { updateNote } = useContext(NoteProvider);
@@ -13,11 +14,15 @@ function ModalUpdate({ setModalUpdate, loader, setLoader, id, notes, setNotes })
   // eslint-disable-next-line react/prop-types
   const note = notes.find((item) => item._id == id);
   async function onSubmit(vals) {
+    const promiseUpdate = updateNote(id, vals);
+    toast.promise(promiseUpdate, {
+      success: "sucess",
+      loading: "loading",
+    });
     try {
       setLoader(true);
-      const data = await updateNote(id, vals);
+      const data = await promiseUpdate;
       setNotes(data.notes);
-
       setModalUpdate(false);
     } catch (error) {
       console.log(error);

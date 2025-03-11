@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import { NoteProvider } from "../Context/ContextNotesProvider";
 import { TokenProvider } from "../Context/ContextTokenProvider";
 import ModalUpdate from "./ModalUpdate";
+import toast from "react-hot-toast";
 
 function Notes() {
   const [showModal, setShowModal] = useState(false);
@@ -13,6 +14,7 @@ function Notes() {
   const [notes, setNotes] = useState(null);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [id, setID] = useState(null);
+  // const [completed, setCompleted] = useState([]);
   // "dd".toUpperCase
   async function getNotesToPage() {
     try {
@@ -29,8 +31,13 @@ function Notes() {
 
   async function deleteFromPage(id) {
     setLoaderIcon((prev) => ({ ...prev, [id]: true }));
+    const promiseDElete = deleteNote(id);
+    toast.promise(promiseDElete, {
+      success: "sucess",
+      loading: "loading",
+    });
     try {
-      const data = await deleteNote(id);
+      const data = await promiseDElete;
       setNotes(data?.notes);
     } catch (error) {
       console.log(error);
@@ -48,9 +55,11 @@ function Notes() {
       <div className="flex flex-wrap">
         {notes?.map((item) => (
           <div key={item._id} className="p-3 w-full  md:w-1/2">
-            <div className="bg-white p-2 rounded-md transition-all duration-300 cursor-pointer hover:translate-y-[3px] ">
+            <div className="bg-white border-b-1 sm:border-b-0 p-2 rounded-md transition-all duration-300 cursor-pointer hover:translate-y-[3px] ">
               <h2 className="font-bold text-xl custom-style">{item.title.toUpperCase()}</h2>
-              <p className="font-medium mt-1 max-h-[350px]  overflow-y-auto">{item.content}</p>
+              <p className="font-medium mt-1 max-h-[250px]  bg-slate-100 rounded-sm p-1 overflow-y-auto  break-words">
+                {item.content}
+              </p>
               <div className="flex justify-center items-center gap-2 mt-3">
                 <button
                   onClick={() => {
@@ -74,9 +83,14 @@ function Notes() {
                     <i className="fa-solid fa-trash-can"></i>
                   )}
                 </button>
-                <button className="relative overflow-hidden bg-amber-500 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-amber-500 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300">
+                {/* <button
+                  onClick={() => {
+                    console.log("dsdas");
+                  }}
+                  className="relative overflow-hidden bg-amber-500 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-amber-500 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300"
+                >
                   <i className="fa-solid fa-square-check"></i>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -87,8 +101,11 @@ function Notes() {
         onClick={() => {
           setShowModal(true);
         }}
-        className="fixed bottom-[10px] right-[15px]   sm:bottom-[50px] sm:right-[30px] overflow-hidden bg-sky-500 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-sky-600 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300 disabled:cursor-not-allowed z-[60] "
+        className=" btn fixed bottom-[10px] right-[15px]   sm:bottom-[50px] sm:right-[30px] overflow-hidden bg-sky-500 rounded-lg  text-white px-3 py-2 md:rounded-lg cursor-pointer hover:bg-sky-600 text-lg block after:absolute after:w-[10px] after:h-[100%] after:rotate-[15deg] after:top-[0px] after:left-[-15px] after:bg-slate-200  hover:after:left-[calc(100%_+_5px)] after:transition-all after:duration-300 disabled:cursor-not-allowed z-[60]   "
       >
+        <span className=" text-sm fixed bottom-[70px] right-[0px]   sm:bottom-[110px] sm:right-[10px]  rounded-md  invisible  bg-slate-700 p-2 text-white ">
+          Add Note
+        </span>
         <i className="fa-solid fa-plus"></i>
       </button>
       {showModal && (
